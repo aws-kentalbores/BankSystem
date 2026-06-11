@@ -9,7 +9,7 @@ public class Main {
 		SavingsAccount account;
 		while(true) {
 			Scanner sc = new Scanner(System.in);
-			System.out.println("Welcome to the Bank Account Management System!\n [1] Use Account \n [2] Create Account \n [3] List Accounts \n [4] Get Account \n [5] Transaction History of Account \n [6] Exit");
+			System.out.println("\nWelcome to the Bank Account Management System!\n [1] Use Account \n [2] Create Account \n [3] List Accounts \n [4] Get Account \n [5] Transaction History of Account \n [6] Exit");
 			int choice = sc.nextInt();
 			sc.nextLine(); // Consume newline
 			if (choice == 1) {
@@ -29,13 +29,13 @@ public class Main {
 							System.out.println("Enter amount to deposit:");
 							double amount = sc.nextDouble();
 							sc.nextLine(); // Consume newline
-							account.deposit(amount);
+							account.deposit(roundToTwoDecimalPlaces(amount));
 							System.out.println("Current balance: " + account.getBalance());
 						} else if (command.equalsIgnoreCase("withdraw")) {
 							System.out.println("Enter amount to withdraw:");
 							double amount = sc.nextDouble();
 							sc.nextLine(); // Consume newline
-							account.withdraw(amount);
+							account.withdraw(roundToTwoDecimalPlaces(amount));
 							System.out.println("Current balance: " + account.getBalance());
 						} else if (command.equalsIgnoreCase("freeze")) {
 							account.freezeAccount();
@@ -74,6 +74,7 @@ public class Main {
 					account = (SavingsAccount) manager.accounts.get(id);
 					System.out.println("Transaction history for account ID " + id + ":");
 					for (Transaction t : account.getTransactionHistory()) {
+						System.out.println("-------------------------");
 						System.out.println(t);
 					}
 				} else {
@@ -86,54 +87,12 @@ public class Main {
 				System.out.println("Invalid choice. Please try again.");
 			}
 			
-			
-			
-			
-			
-//			System.out.println("Welcome to the Bank Account Management System!\nEnter your name:");
-//			String nameInput = sc.nextLine();
-//			SavingsAccount savingsAccount1 = new SavingsAccount(nameInput);
-//
-//			System.out.println("Hello, " + savingsAccount1.getOwnerName() + "! Your savings account has been created");
-//			System.out.println("Your current balance is: " + savingsAccount1.getBalance());
-//
-//			while (true) {
-//				System.out.println("Enter a command (deposit, withdraw, freeze, unfreeze, logout, exit):");
-//				String command = sc.nextLine();
-//
-//				if (command.equalsIgnoreCase("deposit")) {
-//					System.out.println("Enter amount to deposit:");
-//					double amount = sc.nextDouble();
-//					sc.nextLine(); // Consume newline
-//					savingsAccount1.deposit(amount);
-//					System.out.println("Current balance: " + savingsAccount1.getBalance());
-//				} else if (command.equalsIgnoreCase("withdraw")) {
-//					System.out.println("Enter amount to withdraw:");
-//					double amount = sc.nextDouble();
-//					sc.nextLine(); // Consume newline
-//					savingsAccount1.withdraw(amount);
-//					System.out.println("Current balance: " + savingsAccount1.getBalance());
-//				} else if (command.equalsIgnoreCase("freeze")) {
-//					savingsAccount1.freezeAccount();
-//					System.out.println("Your account has been frozen.");
-//				} else if (command.equalsIgnoreCase("unfreeze")) {
-//					savingsAccount1.unfreezeAccount();
-//					System.out.println("Your account has been unfrozen.");
-//				} else if (command.equalsIgnoreCase("exit")) {
-//					System.out.println("Thank you for using the Bank Account Management System. Goodbye!");
-//					break;
-//				}
-//				
-//				
-//				
-//				
-//				
-//				else {
-//					System.out.println("Invalid command. Please try again.");
-//				}
-//			}		
-			
 		}
 	}
 
+	public static double roundToTwoDecimalPlaces(double amount) {
+		
+		return Math.round(amount * 100.0) / 100.0;
+
+	}
 }

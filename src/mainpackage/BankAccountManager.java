@@ -45,6 +45,7 @@ public class BankAccountManager implements Bank {
         for (Map.Entry<Integer, BankAccount> e : accounts.entrySet()) {
             int accountId = e.getKey();
             BankAccount account = e.getValue();
+            System.out.println("\n-------------------------");
             System.out.println("Account ID: " + accountId);
             System.out.println("Name: " + ((SavingsAccount) account).getOwnerName());
             System.out.println("Balance: " + account.getBalance());

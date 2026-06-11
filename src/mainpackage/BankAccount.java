@@ -25,7 +25,7 @@ public class BankAccount {
 			System.out.println("Deposit amount must be positive.");
 			return;
 		}
-		balance += amount;
+		balance += Main.roundToTwoDecimalPlaces(amount);
 		
 		Transaction transaction = new Transaction("Deposit", amount);
 		transactions.add(transaction);
