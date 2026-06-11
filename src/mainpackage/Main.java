@@ -6,7 +6,7 @@ public class Main {
 
 	public static void main(String[] args) {	
 		BankAccountManager manager = new BankAccountManager();
-		SavingsAccount account;
+		BankAccount account;
 		while(true) {
 			Scanner sc = new Scanner(System.in);
 			System.out.println("\nWelcome to the Bank Account Management System!\n [1] Use Account \n [2] Create Account \n [3] List Accounts \n [4] Get Account \n [5] Transaction History of Account \n [6] Exit");
@@ -18,7 +18,7 @@ public class Main {
 				sc.nextLine(); // Consume newline
 				if (manager.accounts.containsKey(id)) {
 					account = (SavingsAccount) manager.accounts.get(id);
-					System.out.println("Hello, " + account.getOwnerName() + "! Your savings account has been accessed");
+					System.out.println("Hello, " + ((SavingsAccount) account).getOwnerName() + "! Your savings account has been accessed");
 					System.out.println("Your current balance is: " + account.getBalance());
 
 					while (true) {
