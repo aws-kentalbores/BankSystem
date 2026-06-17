@@ -109,4 +109,14 @@ public class BankAccountManager implements Bank {
                         tx2.getAmount()))
                 .toList();
     }
+
+    /**
+     * Retrieves the map of bank accounts.
+     *
+     * @return the map of bank accounts
+     */
+    @SuppressWarnings("rawtypes")
+    public Map getBankAccount() {
+        return accounts;
+    }
 }

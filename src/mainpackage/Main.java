@@ -2,6 +2,10 @@ package mainpackage;
 
 import java.util.Scanner;
 
+import exception.AccountFrozenException;
+import exception.InsufficientFundsException;
+import exception.InvalidAmountException;
+
 /**
  * Main class to run the Bank Account Management System.
  */
@@ -12,71 +16,100 @@ public final class Main {
 
     /**
      * Main method to start the application.
+     *
      * @param args command line arguments
+     * @throws InsufficientFundsException
+     * @throws AccountFrozenException
+     * @throws InvalidAmountException
      */
-    public static void main(final String[] args) {
+    public static void main(final String[] args) throws InvalidAmountException,
+            AccountFrozenException, InsufficientFundsException {
         BankAccountManager manager = new BankAccountManager();
         BankAccount account;
         while (true) {
+            int choice;
             Scanner sc = new Scanner(System.in);
-            System.out.println("\nWelcome to the Bank Account "
-                    + "Management System!"
-                    + "\n [1] Use Account \n [2] Create Account "
-                    + "\n [3] List Accounts \n [4] Get Account "
-                    + "\n [5] Transaction History of Account \n [6] Exit");
-            int choice = sc.nextInt();
-            sc.nextLine(); // Consume newline
-            if (choice == 1) {
-                System.out.println("Enter account ID:");
-                int id = sc.nextInt();
+            try {
+                System.out.println(
+                        "\nWelcome to the Bank Account " + "Management System!"
+                                + "\n [1] Use Account \n [2] Create Account "
+                                + "\n [3] List Accounts \n [4] Get Account "
+                                + "\n [5] Transaction History of Account "
+                                + "\n [6] Filter Accouts \n [7] Sort Accounts "
+                                + "\n [8] Exit");
+                choice = sc.nextInt();
                 sc.nextLine(); // Consume newline
-                if (manager.accounts.containsKey(id)) {
-                    account = (SavingsAccount) manager.accounts.get(id);
+            } catch (Exception e) {
+                System.out.println("Invalid input. Please enter a number.");
+                sc.nextLine(); // Consume the invalid input
+                continue;
+            }
+            if (choice == 1) {
+                int id;
+                try {
+                    System.out.println("Enter account ID:");
+                    id = sc.nextInt();
+                    sc.nextLine(); // Consume newline
+                } catch (Exception e) {
+                    System.out.println("Invalid input. Please enter a number.");
+                    sc.nextLine(); // Consume the invalid input
+                    continue;
+                }
+                if (manager.getBankAccount().containsKey(id)) {
+                    account = (SavingsAccount) manager.getBankAccount().get(id);
                     System.out.println("Hello, "
                             + ((SavingsAccount) account).getOwnerName()
                             + "! Your savings account has been accessed");
-                    System.out.println("Your current balance is: "
-                            + account.getBalance());
+                    System.out.println(
+                            "Your current balance is: " + account.getBalance());
 
                     while (true) {
-                        System.out.println(""
-                                + "Enter a command (deposit, withdraw, "
-                                + "freeze, unfreeze, logout):"
-                                + "");
+                        System.out.println(
+                                "" + "Enter a command (deposit, withdraw, "
+                                        + "freeze, unfreeze, logout):" + "");
                         String command = sc.nextLine();
 
-                        if (command.equalsIgnoreCase("deposit")) {
-                            System.out.println("Enter amount to deposit:");
-                            double amount = sc.nextDouble();
-                            sc.nextLine(); // Consume newline
-                            account.deposit(roundToTwoDecimalPlaces(amount));
-                            System.out.println("Current balance: "
-                            + account.getBalance());
-                        } else if (command.equalsIgnoreCase("withdraw")) {
-                            System.out.println("Enter amount to withdraw:");
-                            double amount = sc.nextDouble();
-                            sc.nextLine(); // Consume newline
-                            account.withdraw(roundToTwoDecimalPlaces(amount));
-                            System.out.println("Current balance: "
-                            + account.getBalance());
-                        } else if (command.equalsIgnoreCase("freeze")) {
-                            account.freezeAccount();
-                            System.out.println("Your account has been frozen.");
-                        } else if (command.equalsIgnoreCase("unfreeze")) {
-                            account.unfreezeAccount();
-                            System.out.println("Your account has "
-                                    + "been unfrozen.");
-                        } else if (command.equalsIgnoreCase("logout")) {
-                            System.out.println("Logging out of the account.");
-                            break;
-                        } else {
-                            System.out.println("Invalid command. "
-                                    + "Please try again.");
+                        try {
+                            if (command.equalsIgnoreCase("deposit")) {
+                                System.out.println("Enter amount to deposit:");
+                                double amount = sc.nextDouble();
+                                sc.nextLine(); // Consume newline
+                                account.deposit(
+                                        roundToTwoDecimalPlaces(amount));
+                                System.out.println("Current balance: "
+                                        + account.getBalance());
+                            } else if (command.equalsIgnoreCase("withdraw")) {
+                                System.out.println("Enter amount to withdraw:");
+                                double amount = sc.nextDouble();
+                                sc.nextLine(); // Consume newline
+                                account.withdraw(
+                                        roundToTwoDecimalPlaces(amount));
+                                System.out.println("Current balance: "
+                                        + account.getBalance());
+                            } else if (command.equalsIgnoreCase("freeze")) {
+                                account.freezeAccount();
+                                System.out.println(
+                                        "Your account has been frozen.");
+                            } else if (command.equalsIgnoreCase("unfreeze")) {
+                                account.unfreezeAccount();
+                                System.out.println(
+                                        "Your account has " + "been unfrozen.");
+                            } else if (command.equalsIgnoreCase("logout")) {
+                                System.out
+                                        .println("Logging out of the account.");
+                                break;
+                            } else {
+                                System.out.println("Invalid command. "
+                                        + "Please try again.");
+                            }
+                        } catch (InvalidAmountException | AccountFrozenException
+                                | InsufficientFundsException e) {
+                            System.out.println("Error: " + e.getMessage());
                         }
                     }
                 } else {
-                    System.out.println("Account with ID "
-                            + id + " does not exist.");
+                    System.out.println(
+                            "Account with ID " + id + " does not exist.");
                 }
 
             } else if (choice == 2) {
@@ -96,32 +129,40 @@ public final class Main {
                 int id = sc.nextInt();
                 sc.nextLine(); // Consume newline
 
-                if (manager.accounts.containsKey(id)) {
-                    account = (SavingsAccount) manager.accounts.get(id);
-                    System.out.println("Transaction history for account ID "
-                            + id + ":");
+                if (manager.getBankAccount()
+                        .get(id) instanceof SavingsAccount) {
+                    account = (SavingsAccount) manager.getBankAccount().get(id);
+                    System.out.println(
+                            "Transaction history for account ID " + id + ":");
                     for (Transaction t : account.getTransactionHistory()) {
-                        System.out.println("-----------"
-                                + "--------------");
+                        System.out.println("-----------" + "--------------");
                         System.out.println(t);
                     }
                 } else {
-                    System.out.println("Account with ID "
-                + id + " does not exist.");
+                    System.out.println(
+                            "Account with ID " + id + " does not exist.");
                 }
             } else if (choice == 6) {
-                System.out.println("Thank you for using the Bank "
-                        + "Account Management System. Goodbye!");
+
+                System.out.println("Filter accounts by balance range.");
+
+            } else if (choice == 7) {
+                System.out.println(
+                        "Sorting accounts by balance in ascending order:");
+                // use BankAccountManager sort method heheh not done
+
+            } else if (choice == 8) {
+                System.out.println("Exiting the application. Goodbye!");
                 break;
             } else {
                 System.out.println("Invalid choice. Please try again.");
             }
-            sc.close();
         }
     }
 
     /**
      * Utility method to round a double value to two decimal places.
+     *
      * @param amount the amount to be rounded
      * @return the rounded amount
      */
