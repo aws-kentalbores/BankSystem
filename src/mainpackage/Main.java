@@ -144,12 +144,29 @@ public final class Main {
                 }
             } else if (choice == 6) {
 
-                System.out.println("Filter accounts by balance range.");
+                System.out.println("Enter range: ");
+                double amount = sc.nextDouble();
+                sc.nextLine(); // Consume newline
+                System.out.println("Transactions at or above " + amount + ":");
 
             } else if (choice == 7) {
-                System.out.println(
-                        "Sorting accounts by balance in ascending order:");
-                // use BankAccountManager sort method heheh not done
+             // use BankAccountManager sort method heheh not done
+                //manager.sortAccountsByBalance();
+                    System.out.println("Account ID to sort by balance:");
+                    int id = sc.nextInt();
+                    sc.nextLine(); // Consume newline
+                    if (manager.getBankAccount()
+                            .get(id) instanceof SavingsAccount) {
+                        account = (SavingsAccount) manager.getBankAccount()
+                                .get(id);
+                        System.out.println("Accounts sorted by balance:");
+                        System.out.println("-----------" + "--------------");
+                        System.out.println("Account ID: " + id);
+                        System.out.println("Balance: " + account.getBalance());
+                    } else {
+                        System.out.println(
+                                "Account with ID " + id + " does not exist.");
+                    }
 
             } else if (choice == 8) {
                 System.out.println("Exiting the application. Goodbye!");

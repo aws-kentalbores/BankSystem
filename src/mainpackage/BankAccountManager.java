@@ -72,8 +72,8 @@ public class BankAccountManager implements Bank {
 
             // Safer casting check
             if (account instanceof SavingsAccount) {
-                System.out.println("Name: "
-            + ((SavingsAccount) account).getOwnerName());
+                System.out.println(
+                        "Name: " + ((SavingsAccount) account).getOwnerName());
             }
 
             System.out.println("Balance: " + account.getBalance());
@@ -85,28 +85,24 @@ public class BankAccountManager implements Bank {
      * Filters transactions that are at or above a specified amount.
      *
      * @param amount the threshold amount
-     * @param txList the list of transactions to filter
      * @return a list of transactions meeting the criteria
      */
-    public List<Transaction> filterTransactionsAtOrAbove(
-            final double amount,
-            final List<Transaction> txList) {
-        return txList.stream()
-                .filter(tx -> tx.getAmount() >= amount)
-                .toList();
+    public List<Transaction> filterTransactionsAtOrAbove(final double amount) {
+        return accounts.values().stream()
+                .flatMap(account -> account.getTransactionHistory().stream())
+                .filter(tx -> tx.getAmount() >= amount).toList();
     }
 
     /**
      * Sorts transactions by their amount in ascending order.
      *
-     * @param txList the list of transactions to sort
+     * @param id the ID of the account whose transactions are to be sorted
      * @return a sorted list of transactions
      */
-    public List<Transaction> sortTransactionsByAmount(
-            final List<Transaction> txList) {
-        return txList.stream()
-                .sorted((tx1, tx2) -> Double.compare(tx1.getAmount(),
-                        tx2.getAmount()))
+    public List<Transaction> sortTransactionsByAmount(int id) {
+
+        return this.accounts.get(id).getTransactionHistory().stream().sorted(
+                (tx1, tx2) -> Double.compare(tx1.getAmount(), tx2.getAmount()))
                 .toList();
     }
 
