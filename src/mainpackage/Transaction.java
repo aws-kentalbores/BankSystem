@@ -16,4 +16,13 @@ public class Transaction {
 	public String toString() {
 		return "Transaction Type: " + type + ", Amount: " + amount + ", Time: " + time_stamp;
 	}
+
+    /**
+     * Retrieves the type of this transaction.
+     *
+     * @return the type of the transaction
+     */
+    public double getAmount() {
+        return amount;
+    }
 }

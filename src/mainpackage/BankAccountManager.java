@@ -1,56 +1,112 @@
 package mainpackage;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+/**
+ * Manages bank accounts and transaction processing.
+ */
 public class BankAccountManager implements Bank {
-	public Map<Integer, BankAccount> accounts;
-	private int id;
-	
-	public BankAccountManager() {
-		accounts = new HashMap<>();
-		id = 0;
-	}
 
-	@Override
-	public void addAccount(BankAccount account) {
-		if (id >= 100) {
-			System.out.println("Maximum account limit reached. Cannot add more accounts.");
-			return;
-		}
-		accounts.put(id, account);
-		System.out.println("Account added with ID: " + id);
-		id++;
+    /**
+     * The maximum number of bank accounts that can be managed.
+     */
+    private static final int MAX_ACCOUNTS = 100;
 
-	}
+    /**
+     * A map to store bank accounts with their corresponding IDs.
+     */
+    private final Map<Integer, BankAccount> accounts;
 
-	@Override
-	public void getAccount(int id) {
-		if (accounts.containsKey(id)) {
-			BankAccount account = accounts.get(id);
-			System.out.println("Account ID: " + id);
-			System.out.println("Balance: " + account.getBalance());
-			System.out.println("Is Frozen: " + account.isAccountFrozen());
-		} else {
-			System.out.println("Account with ID " + id + " does not exist.");
-		}
+    /**
+     * An integer to keep track of the next available account ID.
+     */
+    private int nextId;
 
-	}
-	
-	public void listAccounts() {
+    /**
+     * Constructs a new BankAccountManager.
+     */
+    public BankAccountManager() {
+        this.accounts = new HashMap<>();
+        this.nextId = 0;
+    }
+
+    @Override
+    public final void addAccount(final BankAccount account) {
+        if (nextId >= MAX_ACCOUNTS) {
+            System.out.println("Maximum account limit reached."
+                    + " Cannot add more accounts.");
+            return;
+        }
+        accounts.put(nextId, account);
+        System.out.println("Account added with ID: " + nextId);
+        nextId++;
+    }
+
+    @Override
+    public final void getAccount(final int id) {
+        if (accounts.containsKey(id)) {
+            BankAccount account = accounts.get(id);
+            System.out.println("Account ID: " + id);
+            System.out.println("Balance: " + account.getBalance());
+            System.out.println("Is Frozen: " + account.isAccountFrozen());
+        } else {
+            System.out.println("Account with ID " + id + " does not exist.");
+        }
+    }
+
+    /**
+     * Lists all accounts currently managed.
+     */
+    public void listAccounts() {
         if (accounts.isEmpty()) {
             System.out.println("No accounts available.");
             return;
         }
-        for (Map.Entry<Integer, BankAccount> e : accounts.entrySet()) {
-            int accountId = e.getKey();
-            BankAccount account = e.getValue();
+        for (Map.Entry<Integer, BankAccount> entry : accounts.entrySet()) {
+            int accountId = entry.getKey();
+            BankAccount account = entry.getValue();
             System.out.println("\n-------------------------");
             System.out.println("Account ID: " + accountId);
-            System.out.println("Name: " + ((SavingsAccount) account).getOwnerName());
+
+            // Safer casting check
+            if (account instanceof SavingsAccount) {
+                System.out.println("Name: "
+            + ((SavingsAccount) account).getOwnerName());
+            }
+
             System.out.println("Balance: " + account.getBalance());
             System.out.println("-------------------------");
         }
     }
 
+    /**
+     * Filters transactions that are at or above a specified amount.
+     *
+     * @param amount the threshold amount
+     * @param txList the list of transactions to filter
+     * @return a list of transactions meeting the criteria
+     */
+    public List<Transaction> filterTransactionsAtOrAbove(
+            final double amount,
+            final List<Transaction> txList) {
+        return txList.stream()
+                .filter(tx -> tx.getAmount() >= amount)
+                .toList();
+    }
+
+    /**
+     * Sorts transactions by their amount in ascending order.
+     *
+     * @param txList the list of transactions to sort
+     * @return a sorted list of transactions
+     */
+    public List<Transaction> sortTransactionsByAmount(
+            final List<Transaction> txList) {
+        return txList.stream()
+                .sorted((tx1, tx2) -> Double.compare(tx1.getAmount(),
+                        tx2.getAmount()))
+                .toList();
+    }
 }
