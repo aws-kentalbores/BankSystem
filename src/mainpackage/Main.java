@@ -122,16 +122,22 @@ public final class Main {
     }
 
     /**
-     * Reads an account ID from the user.
+     * Reads an account ID from the user, handling invalid input.
      *
      * @param sc the scanner to read from
-     * @return the account ID entered
+     * @return the account ID entered, or null if the input was invalid
      */
-    private static int readAccountId(final Scanner sc) {
+    private static Integer readAccountId(final Scanner sc) {
         System.out.println("Enter account ID:");
-        int id = sc.nextInt();
-        sc.nextLine();
-        return id;
+        try {
+            int id = sc.nextInt();
+            sc.nextLine();
+            return id;
+        } catch (Exception e) {
+            System.out.println("Invalid input. Please enter a number.");
+            sc.nextLine();
+            return null;
+        }
     }
 
     /**
@@ -146,12 +152,8 @@ public final class Main {
     private static void useAccount(final Scanner sc,
             final BankAccountManager manager) throws InvalidAmountException,
             AccountFrozenException, InsufficientFundsException {
-        int id;
-        try {
-            id = readAccountId(sc);
-        } catch (Exception e) {
-            System.out.println("Invalid input. Please enter a number.");
-            sc.nextLine();
+        Integer id = readAccountId(sc);
+        if (id == null) {
             return;
         }
 
@@ -215,14 +217,18 @@ public final class Main {
             InsufficientFundsException {
         if (command.equalsIgnoreCase("deposit")) {
             System.out.println("Enter amount to deposit:");
-            double amount = sc.nextDouble();
-            sc.nextLine();
+            Double amount = readDouble(sc);
+            if (amount == null) {
+                return false;
+            }
             account.deposit(roundToTwoDecimalPlaces(amount));
             System.out.println("Current balance: " + account.getBalance());
         } else if (command.equalsIgnoreCase("withdraw")) {
             System.out.println("Enter amount to withdraw:");
-            double amount = sc.nextDouble();
-            sc.nextLine();
+            Double amount = readDouble(sc);
+            if (amount == null) {
+                return false;
+            }
             account.withdraw(roundToTwoDecimalPlaces(amount));
             System.out.println("Current balance: " + account.getBalance());
         } else if (command.equalsIgnoreCase("freeze")) {
@@ -238,6 +244,24 @@ public final class Main {
             System.out.println("Invalid command. Please try again.");
         }
         return false;
+    }
+
+    /**
+     * Reads a double value from the user, handling invalid input.
+     *
+     * @param sc the scanner to read from
+     * @return the value entered, or null if the input was invalid
+     */
+    private static Double readDouble(final Scanner sc) {
+        try {
+            double value = sc.nextDouble();
+            sc.nextLine();
+            return value;
+        } catch (Exception e) {
+            System.out.println("Invalid input. Please enter a number.");
+            sc.nextLine();
+            return null;
+        }
     }
 
     /**
@@ -262,7 +286,10 @@ public final class Main {
      */
     private static void getAccount(final Scanner sc,
             final BankAccountManager manager) {
-        int id = readAccountId(sc);
+        Integer id = readAccountId(sc);
+        if (id == null) {
+            return;
+        }
         manager.getAccount(id);
     }
 
@@ -274,7 +301,10 @@ public final class Main {
      */
     private static void showTransactionHistory(final Scanner sc,
             final BankAccountManager manager) {
-        int id = readAccountId(sc);
+        Integer id = readAccountId(sc);
+        if (id == null) {
+            return;
+        }
         BankAccount account = getSavingsAccountOrNull(manager, id);
         if (account == null) {
             System.out.println("Account with ID " + id + " does not exist.");
@@ -296,7 +326,10 @@ public final class Main {
      */
     private static void filterAccounts(final Scanner sc,
             final BankAccountManager manager) {
-        int id = readAccountId(sc);
+        Integer id = readAccountId(sc);
+        if (id == null) {
+            return;
+        }
         BankAccount account = getSavingsAccountOrNull(manager, id);
         if (account == null) {
             System.out.println("Account with ID " + id + " does not exist.");
@@ -304,8 +337,10 @@ public final class Main {
         }
 
         System.out.println("Enter range: ");
-        double amount = sc.nextDouble();
-        sc.nextLine();
+        Double amount = readDouble(sc);
+        if (amount == null) {
+            return;
+        }
         manager.filterTransactionsAtOrAbove(amount,
                 account.getTransactionHistory());
     }
@@ -318,7 +353,10 @@ public final class Main {
      */
     private static void sortAccounts(final Scanner sc,
             final BankAccountManager manager) {
-        int id = readAccountId(sc);
+        Integer id = readAccountId(sc);
+        if (id == null) {
+            return;
+        }
         BankAccount account = getSavingsAccountOrNull(manager, id);
         if (account == null) {
             System.out.println("Account with ID " + id + " does not exist.");

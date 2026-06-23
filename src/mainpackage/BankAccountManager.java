@@ -94,7 +94,7 @@ public class BankAccountManager implements Bank {
             + amount + "...");
         List<Transaction> result = transactions.stream()
                 .filter(tx -> tx.getAmount() >= amount).toList();
-        System.out.println(result);
+        printTransactions(result);
         return result;
     }
 
@@ -111,8 +111,23 @@ public class BankAccountManager implements Bank {
                 .sorted((tx1, tx2) -> Double.compare(tx1.getAmount(),
                         tx2.getAmount()))
                 .toList();
-        System.out.println(result);
+        printTransactions(result);
         return result;
+    }
+
+    /**
+     * Prints a list of transactions, one per line.
+     *
+     * @param transactions the transactions to print
+     */
+    private void printTransactions(final List<Transaction> transactions) {
+        if (transactions.isEmpty()) {
+            System.out.println("No matching transactions.");
+            return;
+        }
+        for (Transaction t : transactions) {
+            System.out.println(t);
+        }
     }
 
     /**
