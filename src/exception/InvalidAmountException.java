@@ -1,16 +1,15 @@
 package exception;
 
+/**
+ * Thrown to indicate that an invalid monetary amount was supplied,
+ * such as a negative or zero deposit or withdrawal amount.
+ */
 public class InvalidAmountException extends Exception {
+
     /**
-     *
+     * Serialization version UID.
      */
     private static final long serialVersionUID = 1L;
-    /**
-     * Constructor for InvalidAmountException.
-     *
-     * @param message the message to be associated with the exception
-     */
-    private String message;
 
     /**
      * Constructs an InvalidAmountException with the specified message.
@@ -18,16 +17,6 @@ public class InvalidAmountException extends Exception {
      * @param theMessage the message to be associated with the exception
      */
     public InvalidAmountException(final String theMessage) {
-        this.message = theMessage;
+        super(theMessage);
     }
-
-    /**
-     * Retrieves the message associated with this exception.
-     *
-     * @return the message of the exception
-     */
-    public String getMessage() {
-        return message;
-    }
-
 }

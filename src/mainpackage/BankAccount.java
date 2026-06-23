@@ -119,7 +119,7 @@ public class BankAccount {
 
     /**
      * Checks if the bank account is currently frozen.
-     * 
+     *
      * @return true if the account is frozen, false otherwise
      */
     public boolean isAccountFrozen() {

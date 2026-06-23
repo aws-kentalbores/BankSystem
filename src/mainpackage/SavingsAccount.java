@@ -2,6 +2,9 @@ package mainpackage;
 
 public class SavingsAccount extends BankAccount {
 
+    /**
+     * The name of the account owner.
+     */
     private String ownerName;
 
     /**

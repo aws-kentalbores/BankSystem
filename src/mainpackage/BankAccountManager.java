@@ -85,25 +85,34 @@ public class BankAccountManager implements Bank {
      * Filters transactions that are at or above a specified amount.
      *
      * @param amount the threshold amount
+     * @param transactions the list of transactions to filter
      * @return a list of transactions meeting the criteria
      */
-    public List<Transaction> filterTransactionsAtOrAbove(final double amount) {
-        return accounts.values().stream()
-                .flatMap(account -> account.getTransactionHistory().stream())
+    public List<Transaction> filterTransactionsAtOrAbove(final double amount,
+            final List<Transaction> transactions) {
+        System.out.println("Filtering transactions at or above "
+            + amount + "...");
+        List<Transaction> result = transactions.stream()
                 .filter(tx -> tx.getAmount() >= amount).toList();
+        System.out.println(result);
+        return result;
     }
 
     /**
      * Sorts transactions by their amount in ascending order.
      *
-     * @param id the ID of the account whose transactions are to be sorted
+     * @param transactions the list of transactions to sort
      * @return a sorted list of transactions
      */
-    public List<Transaction> sortTransactionsByAmount(int id) {
-
-        return this.accounts.get(id).getTransactionHistory().stream().sorted(
-                (tx1, tx2) -> Double.compare(tx1.getAmount(), tx2.getAmount()))
+    public List<Transaction> sortTransactionsByAmount(
+            final List<Transaction> transactions) {
+        System.out.println("Sorting transactions by amount...");
+        List<Transaction> result = transactions.stream()
+                .sorted((tx1, tx2) -> Double.compare(tx1.getAmount(),
+                        tx2.getAmount()))
                 .toList();
+        System.out.println(result);
+        return result;
     }
 
     /**
